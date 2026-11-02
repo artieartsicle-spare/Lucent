@@ -116,6 +116,7 @@ fn snapshot(app: &AppHandle) -> Value {
         "spotlightLiveBlur": s.spotlight_live_blur,
         "spotlightEnabled": s.spotlight_enabled,
         "launchAtLogin": launch_at_login(),
+        "checkUpdates": s.check_updates,
         "version": env!("CARGO_PKG_VERSION"),
         "dataDir": data_dir(app).to_string_lossy(),
     })
@@ -213,6 +214,10 @@ pub fn settings_set(app: AppHandle, key: String, value: Value) -> Value {
             }
         }
         "launchAtLogin" => set_launch_at_login(value.as_bool().unwrap_or(false)),
+        "checkUpdates" => {
+            st.settings.lock().unwrap().check_updates = value.as_bool().unwrap_or(true);
+            save_settings(&app);
+        }
         _ => {}
     }
     let snap = snapshot(&app);
@@ -238,6 +243,7 @@ pub fn settings_action(app: AppHandle, id: String) {
         "spotlight" => crate::spotlight::toggle(&app),
         "reset-spotlight-icons" => crate::spotlight::reset_all_icons(&app),
         "clear-clipboard" => crate::spotlight::spotlight_clip_clear(app.clone()),
+        "check-update" => crate::updates::manual(app.clone()),
         "open-data" => {
             use tauri_plugin_opener::OpenerExt;
             let _ = app.opener().open_path(data_dir(&app).to_string_lossy().to_string(), None::<&str>);

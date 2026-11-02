@@ -8,12 +8,12 @@ import { parseCoords, savedPlace, savePlace, searchPlaces } from './widgets/_whe
 
 type S = {
   appearance: 'light' | 'dark' | 'auto'; widgetStyle: string; accent: string;
-  desktopIcons: boolean; desktopMenu: boolean; showDrives: boolean; uiFont: string; iconSize: number; galleryAboveDock: boolean; dockClearance: number; spotlightLiveBlur: boolean; spotlightEnabled: boolean; launchAtLogin: boolean; version: string; dataDir: string;
+  desktopIcons: boolean; desktopMenu: boolean; showDrives: boolean; uiFont: string; iconSize: number; galleryAboveDock: boolean; dockClearance: number; spotlightLiveBlur: boolean; spotlightEnabled: boolean; launchAtLogin: boolean; checkUpdates: boolean; version: string; dataDir: string;
 };
 const TAURI = '__TAURI_INTERNALS__' in window;
 const demo: S = {
   appearance: 'light', widgetStyle: 'regular', accent: '#0a84ff', uiFont: 'auto', desktopIcons: false,
-  desktopMenu: true, showDrives: true, iconSize: 64, galleryAboveDock: false, dockClearance: 70, spotlightLiveBlur: false, spotlightEnabled: true, launchAtLogin: false, version: '0.1.0', dataDir: 'C:\\Users\\you\\AppData\\Roaming\\com.lucent.app',
+  desktopMenu: true, showDrives: true, iconSize: 64, galleryAboveDock: false, dockClearance: 70, spotlightLiveBlur: false, spotlightEnabled: true, launchAtLogin: false, checkUpdates: true, version: '0.1.1', dataDir: 'C:\\Users\\you\\AppData\\Roaming\\com.lucent.app',
 };
 const DEMO: Record<string, unknown> = {
   net_status: { wifi: { available: true, connected: true, ssid: 'Home Wi-Fi', signal: 82 }, adapters: [
@@ -40,7 +40,7 @@ const set = (key: keyof S, value: unknown) => {
 };
 
 type Ctl =
-  | { t: 'toggle'; key: 'desktopIcons' | 'desktopMenu' | 'showDrives' | 'launchAtLogin' | 'galleryAboveDock' | 'spotlightLiveBlur' | 'spotlightEnabled' }
+  | { t: 'toggle'; key: 'desktopIcons' | 'desktopMenu' | 'showDrives' | 'launchAtLogin' | 'checkUpdates' | 'galleryAboveDock' | 'spotlightLiveBlur' | 'spotlightEnabled' }
   | { t: 'dockheight' }
   | { t: 'radio'; kind: 'WiFi' | 'Bluetooth' }
   | { t: 'wxloc' } | { t: 'slider' } | { t: 'modes' } | { t: 'swatches' } | { t: 'wstyle' } | { t: 'font' }
@@ -87,6 +87,8 @@ const PANES: Pane[] = [
     ] },
     { title: 'About', rows: [
       { id: 'ver', title: 'Version', words: 'about', ctl: [{ t: 'value', get: () => st.version }] },
+      { id: 'upd', title: 'Check for updates', desc: 'Looks for a newer Lucent release on GitHub.', words: 'update upgrade release new version download', ctl: [btn('Check Now', 'check-update')] },
+      { id: 'autoupd', title: 'Check for updates automatically', desc: 'Checks GitHub once each time Lucent starts. Nothing is downloaded or installed.', words: 'update startup automatic', ctl: [{ t: 'toggle', key: 'checkUpdates' }] },
       { id: 'data', title: 'Settings and custom icons', desc: 'Stored in your app data folder.', words: 'folder files appdata', ctl: [btn('Show in Explorer', 'open-data')] },
     ] },
     { title: 'App', rows: [

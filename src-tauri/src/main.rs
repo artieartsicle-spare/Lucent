@@ -12,6 +12,7 @@ mod spotlight;
 mod state;
 mod stats;
 mod tray;
+mod updates;
 mod userwidgets;
 mod web;
 mod wallpaper;
@@ -131,6 +132,7 @@ fn run() {
             spotlight::start(handle.clone());
 
             tray::build(&handle)?;
+            updates::auto(handle.clone());
 
             let gs = handle.global_shortcut();
             let report = |keys: &str, ok: bool| {

@@ -25,6 +25,7 @@ pub struct Settings {
     pub ui_font: String,
     pub tint_window: bool,
     pub reduce_transparency: bool,
+    pub check_updates: bool,
     pub custom_icons: HashMap<String, String>,
     pub spot_custom_icons: HashMap<String, String>,
 }
@@ -46,6 +47,7 @@ impl Default for Settings {
             ui_font: "auto".into(),
             tint_window: true,
             reduce_transparency: false,
+            check_updates: true,
             custom_icons: HashMap::new(),
             spot_custom_icons: HashMap::new(),
         }

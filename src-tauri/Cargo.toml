@@ -1,6 +1,6 @@
 [package]
 name = "lucent"
-version = "0.1.0"
+version = "0.1.1"
 description = "Glass widgets, desktop icons and Spotlight search for the Windows desktop"
 edition = "2021"
 rust-version = "1.77.2"

@@ -20,10 +20,20 @@ fn make_menu(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
         true,
         none,
     )?;
+    let update = MenuItem::with_id(
+        app,
+        "update",
+        match crate::updates::available() {
+            Some(f) => format!("Update Available (v{})\u{2026}", f.version),
+            None => "Check for Updates\u{2026}".to_string(),
+        },
+        true,
+        none,
+    )?;
     let quit = MenuItem::with_id(app, "quit", "Quit", true, none)?;
     let sep1 = PredefinedMenuItem::separator(app)?;
     let sep2 = PredefinedMenuItem::separator(app)?;
-    Menu::with_items(app, &[&edit, &spot, &sep1, &glass, &settings, &sep2, &quit])
+    Menu::with_items(app, &[&edit, &spot, &sep1, &glass, &settings, &update, &sep2, &quit])
 }
 
 fn on_menu(app: &AppHandle, id: &str) {
@@ -31,6 +41,7 @@ fn on_menu(app: &AppHandle, id: &str) {
         "edit" => toggle_edit(app),
         "spotlight" => crate::spotlight::toggle(app),
         "settings" => crate::settings::open(app),
+        "update" => crate::updates::tray_click(app),
         "glass-icons" => {
             let now = app.state::<Shared>().settings.lock().unwrap().desktop_icons;
             crate::settings::set_desktop_icons(app, !now);
