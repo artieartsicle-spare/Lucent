@@ -13,6 +13,7 @@ use tauri::ipc::Response;
 use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent};
 use tauri_plugin_clipboard_manager::ClipboardExt;
 use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 use tauri_plugin_opener::OpenerExt;
 
 use crate::platform;
@@ -92,6 +93,47 @@ fn window(app: &AppHandle) -> Option<WebviewWindow> {
     app.get_webview_window(LABEL)
 }
 
+const HOTKEYS: [&str; 2] = ["Alt+Space", "Control+Alt+Space"];
+
+pub fn enabled(app: &AppHandle) -> bool {
+    app.state::<Shared>().settings.lock().unwrap().spotlight_enabled
+}
+
+pub fn register_hotkeys(app: &AppHandle) {
+    let gs = app.global_shortcut();
+    for keys in HOTKEYS {
+        if gs.is_registered(keys) {
+            continue;
+        }
+        let r = gs.on_shortcut(keys, |app, _s, ev| {
+            if ev.state() == ShortcutState::Pressed {
+                toggle(app);
+            }
+        });
+        println!("[hotkey] {keys}: {}", if r.is_ok() { "ok" } else { "FAILED (already used by another app)" });
+    }
+}
+
+fn unregister_hotkeys(app: &AppHandle) {
+    let gs = app.global_shortcut();
+    for keys in HOTKEYS {
+        let _ = gs.unregister(keys);
+    }
+}
+
+pub fn set_enabled(app: &AppHandle, on: bool) {
+    app.state::<Shared>().settings.lock().unwrap().spotlight_enabled = on;
+    save_settings(app);
+    if on {
+        register_hotkeys(app);
+    } else {
+        hide(app);
+        unregister_hotkeys(app);
+        spotlight_clip_clear(app.clone());
+    }
+    crate::tray::rebuild(app);
+}
+
 pub fn create_window(app: &AppHandle) -> tauri::Result<()> {
     let builder = WebviewWindowBuilder::new(app, LABEL, WebviewUrl::App("spotlight.html".into()))
         .title("Spotlight Search")
@@ -144,6 +186,9 @@ fn grab(x: i32, y: i32, w: i32, h: i32) -> Option<Vec<u8>> {
 }
 
 pub fn show(app: &AppHandle) {
+    if !enabled(app) {
+        return;
+    }
     let Some(w) = window(app) else { return };
     let st = app.state::<Spot>();
     let Some((pos, size)) = target_monitor(app) else { return };
@@ -399,12 +444,17 @@ pub fn start(app: AppHandle) {
     let a = app.clone();
     std::thread::spawn(move || {
         std::thread::sleep(Duration::from_secs(2));
-        index_all(&a);
+        if enabled(&a) {
+            index_all(&a);
+        }
     });
     std::thread::spawn(move || {
         let mut last = String::new();
         loop {
             std::thread::sleep(Duration::from_millis(700));
+            if !enabled(&app) {
+                continue;
+            }
             let Ok(text) = app.clipboard().read_text() else { continue };
             if text.trim().is_empty() || text.len() > 20_000 || text == last {
                 continue;

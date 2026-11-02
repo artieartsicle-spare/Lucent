@@ -8,12 +8,12 @@ import { parseCoords, savedPlace, savePlace, searchPlaces } from './widgets/_whe
 
 type S = {
   appearance: 'light' | 'dark' | 'auto'; widgetStyle: string; accent: string;
-  desktopIcons: boolean; desktopMenu: boolean; showDrives: boolean; uiFont: string; iconSize: number; galleryAboveDock: boolean; dockClearance: number; spotlightLiveBlur: boolean; launchAtLogin: boolean; version: string; dataDir: string;
+  desktopIcons: boolean; desktopMenu: boolean; showDrives: boolean; uiFont: string; iconSize: number; galleryAboveDock: boolean; dockClearance: number; spotlightLiveBlur: boolean; spotlightEnabled: boolean; launchAtLogin: boolean; version: string; dataDir: string;
 };
 const TAURI = '__TAURI_INTERNALS__' in window;
 const demo: S = {
   appearance: 'light', widgetStyle: 'regular', accent: '#0a84ff', uiFont: 'auto', desktopIcons: false,
-  desktopMenu: true, showDrives: true, iconSize: 64, galleryAboveDock: false, dockClearance: 70, spotlightLiveBlur: false, launchAtLogin: false, version: '0.1.0', dataDir: 'C:\\Users\\you\\AppData\\Roaming\\com.lucent.app',
+  desktopMenu: true, showDrives: true, iconSize: 64, galleryAboveDock: false, dockClearance: 70, spotlightLiveBlur: false, spotlightEnabled: true, launchAtLogin: false, version: '0.1.0', dataDir: 'C:\\Users\\you\\AppData\\Roaming\\com.lucent.app',
 };
 const DEMO: Record<string, unknown> = {
   net_status: { wifi: { available: true, connected: true, ssid: 'Home Wi-Fi', signal: 82 }, adapters: [
@@ -40,7 +40,7 @@ const set = (key: keyof S, value: unknown) => {
 };
 
 type Ctl =
-  | { t: 'toggle'; key: 'desktopIcons' | 'desktopMenu' | 'showDrives' | 'launchAtLogin' | 'galleryAboveDock' | 'spotlightLiveBlur' }
+  | { t: 'toggle'; key: 'desktopIcons' | 'desktopMenu' | 'showDrives' | 'launchAtLogin' | 'galleryAboveDock' | 'spotlightLiveBlur' | 'spotlightEnabled' }
   | { t: 'dockheight' }
   | { t: 'radio'; kind: 'WiFi' | 'Bluetooth' }
   | { t: 'wxloc' } | { t: 'slider' } | { t: 'modes' } | { t: 'swatches' } | { t: 'wstyle' } | { t: 'font' }
@@ -139,6 +139,9 @@ const PANES: Pane[] = [
     ] },
   ] },
   { id: 'spotlight', title: 'Spotlight', color: '#636366', glyph: G.spotlight, secs: [
+    { rows: [
+      { id: 'senable', title: 'Enable Spotlight', desc: 'Off: the Alt+Space shortcut is released, Spotlight stops indexing your files and apps, and clipboard history is cleared and no longer recorded.', words: 'spotlight disable turn off on search launcher hotkey shortcut alt space', ctl: [{ t: 'toggle', key: 'spotlightEnabled' }] },
+    ] },
     { title: 'Icons', rows: [
       { id: 'sicons', title: 'Custom icons', desc: 'Right-click an app, file or action in Spotlight and choose Choose Icon… to use your own image.', words: 'icon image reset cache', ctl: [btn('Reset All', 'reset-spotlight-icons', { danger: true, confirm: 'Click again to reset' })] },
     ] },

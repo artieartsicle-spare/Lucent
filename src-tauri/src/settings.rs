@@ -114,6 +114,7 @@ fn snapshot(app: &AppHandle) -> Value {
         "galleryAboveDock": s.gallery_above_dock,
         "dockClearance": s.dock_clearance,
         "spotlightLiveBlur": s.spotlight_live_blur,
+        "spotlightEnabled": s.spotlight_enabled,
         "launchAtLogin": launch_at_login(),
         "version": env!("CARGO_PKG_VERSION"),
         "dataDir": data_dir(app).to_string_lossy(),
@@ -198,6 +199,7 @@ pub fn settings_set(app: AppHandle, key: String, value: Value) -> Value {
             st.settings.lock().unwrap().spotlight_live_blur = value.as_bool().unwrap_or(false);
             save_settings(&app);
         }
+        "spotlightEnabled" => crate::spotlight::set_enabled(&app, value.as_bool().unwrap_or(true)),
         "galleryAboveDock" => {
             st.settings.lock().unwrap().gallery_above_dock = value.as_bool().unwrap_or(false);
             save_settings(&app);
@@ -255,6 +257,8 @@ pub fn settings_action(app: AppHandle, id: String) {
             push_widget_style(&app);
             push_desk_menu(&app);
             push_dock_clear(&app);
+            crate::spotlight::register_hotkeys(&app);
+            crate::tray::rebuild(&app);
             crate::desktop::send(&app);
             crate::desktop::refresh(&app);
             let _ = app.emit("settings:changed", snapshot(&app));

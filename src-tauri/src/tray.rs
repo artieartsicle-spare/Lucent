@@ -9,7 +9,8 @@ use crate::state::Shared;
 fn make_menu(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
     let none = None::<&str>;
     let edit = MenuItem::with_id(app, "edit", "Edit Widgets", true, none)?;
-    let spot = MenuItem::with_id(app, "spotlight", "Spotlight Search (Alt+Space)", true, none)?;
+    let spot_on = crate::spotlight::enabled(app);
+    let spot = MenuItem::with_id(app, "spotlight", "Spotlight Search (Alt+Space)", spot_on, none)?;
     let settings = MenuItem::with_id(app, "settings", "Settings\u{2026}", true, none)?;
     let glass_on = app.state::<Shared>().settings.lock().unwrap().desktop_icons;
     let glass = MenuItem::with_id(

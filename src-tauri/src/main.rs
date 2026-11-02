@@ -150,13 +150,8 @@ fn run() {
                 });
                 report(keys, r.is_ok());
             }
-            for keys in ["Alt+Space", "Control+Alt+Space"] {
-                let r = gs.on_shortcut(keys, |app, _s, ev| {
-                    if ev.state() == ShortcutState::Pressed {
-                        spotlight::toggle(app);
-                    }
-                });
-                report(keys, r.is_ok());
+            if spotlight::enabled(&handle) {
+                spotlight::register_hotkeys(&handle);
             }
             Ok(())
         })
