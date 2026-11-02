@@ -28,6 +28,8 @@
 > [!CAUTION]
 > Lucent is an independent project. It is not affiliated with or endorsed by Apple.
 
+## Acknowledgment
+Big thanks to MyDockFinder and its community for the feedback and inspiration while I built this, even going as far as lending me a GitHub account for deployment. And thank you to everyone who's been waiting patiently for this release.
 
 ## Requirements
 
