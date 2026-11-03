@@ -1,1 +1,0 @@
-{"default":{"identifier":"default","description":"The overlay window and the Spotlight window only need to listen to events from the Rust side; everything else goes through the app's own commands.","local":true,"windows":["main","spotlight","settings"],"permissions":["core:default"]}}
