@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spotlight Search</title>
+  </head>
+  <body>
+    <div id="stage">
+        <div id="box" class="glass">
+          <div id="top">
+            <svg class="mag" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.4"/><path d="m15.4 15.4 5 5"/></svg>
+            <span id="chip" hidden></span>
+            <input id="q" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Spotlight Search" />
+          </div>
+          <div id="body" hidden>
+            <div id="indexbar" hidden><span id="idxlbl">Indexing…</span><div class="track"><i></i></div></div>
+            <div id="content"></div>
+          </div>
+        </div>
+          <button class="circ glass" data-mode="apps" title="Applications (Ctrl+1)" aria-label="Applications"></button>
+          <button class="circ glass" data-mode="files" title="Files (Ctrl+2)" aria-label="Files"></button>
+          <button class="circ glass" data-mode="actions" title="Actions (Ctrl+3)" aria-label="Actions"></button>
+          <button class="circ glass" data-mode="clip" title="Clipboard (Ctrl+4)" aria-label="Clipboard"></button>
+    </div>
+    <script type="module" src="/src/spotlight.ts"></script>
+  </body>
+</html>
