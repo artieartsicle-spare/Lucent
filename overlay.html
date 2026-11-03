@@ -53,26 +53,27 @@
 
 
       .wglint { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden; z-index: 3; }
+      /* --hl (Settings > Glass highlights, 0..1.5) scales every alpha below; alphas above 1 simply clamp. */
       .wglint::before {
         content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
         background:
-          linear-gradient(135deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.28) 22%, rgba(255,255,255,.06) 42%, rgba(255,255,255,.06) 58%, rgba(255,255,255,.3) 80%, rgba(255,255,255,.8) 100%);
+          linear-gradient(135deg, rgba(255,255,255,calc(.95 * var(--hl, 1))) 0%, rgba(255,255,255,calc(.28 * var(--hl, 1))) 22%, rgba(255,255,255,calc(.06 * var(--hl, 1))) 42%, rgba(255,255,255,calc(.06 * var(--hl, 1))) 58%, rgba(255,255,255,calc(.3 * var(--hl, 1))) 80%, rgba(255,255,255,calc(.8 * var(--hl, 1))) 100%);
         -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
         mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-        filter: drop-shadow(0 0 3px rgba(255,255,255,.45));
+        filter: drop-shadow(0 0 3px rgba(255,255,255,calc(.45 * var(--hl, 1))));
       }
       .wglint::after {
         content: ""; position: absolute; inset: 0; border-radius: inherit;
         background:
-          radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,.2), rgba(255,255,255,0) 45%),
-          radial-gradient(110% 80% at 100% 100%, rgba(255,255,255,.12), rgba(255,255,255,0) 40%);
+          radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,calc(.2 * var(--hl, 1))), rgba(255,255,255,0) 45%),
+          radial-gradient(110% 80% at 100% 100%, rgba(255,255,255,calc(.12 * var(--hl, 1))), rgba(255,255,255,0) 40%);
         mix-blend-mode: screen;
       }
       .wglint i { position: absolute; top: -20%; bottom: -20%; left: -60%; width: 38%; transform: skewX(-22deg) translateX(0); opacity: 0;
-        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.34), rgba(255,255,255,0)); }
+        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,calc(.34 * var(--hl, 1))), rgba(255,255,255,0)); }
       .widget.glint-go .wglint i, body:not(.editing) .widget:hover .wglint i { animation: wglint-sweep 1.15s cubic-bezier(.3,.6,.3,1) 1; }
       @keyframes wglint-sweep { 0% { transform: skewX(-22deg) translateX(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: skewX(-22deg) translateX(520%); opacity: 0; } }
-      html[data-theme="dark"] .wglint::before { filter: drop-shadow(0 0 3px rgba(255,255,255,.3)); }
+      html[data-theme="dark"] .wglint::before { filter: drop-shadow(0 0 3px rgba(255,255,255,calc(.3 * var(--hl, 1)))); }
       @media (prefers-reduced-motion: reduce) { .wglint i { display: none; } }
       .widget:has(.ph, .nw-hero) .wglint::after, .widget:has(.ph, .nw-hero) .wglint i { display: none; }
 
@@ -131,7 +132,7 @@
       .widget[data-wstyle="light"] .wc.solid:is(.nw, .mu) :is(img, canvas, video, .mu-art, .nw-hero, .brand, svg.disc) { filter: none; }
       .widget:is([data-wstyle="regular"],[data-wstyle="light"]) .wc.solid::after, .widget:is([data-wstyle="regular"],[data-wstyle="light"]) .wc.clk::after {
         content: ""; position: absolute; inset: 0; z-index: 6; border-radius: inherit; pointer-events: none;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), inset 1.5px 1.5px 1px -.5px rgba(255,255,255,.32), inset -1.5px -1.5px 1px -.5px rgba(255,255,255,.16);
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,calc(.1 * var(--hl, 1))), inset 1.5px 1.5px 1px -.5px rgba(255,255,255,calc(.32 * var(--hl, 1))), inset -1.5px -1.5px 1px -.5px rgba(255,255,255,calc(.16 * var(--hl, 1)));
       }
       .wc svg { display: block; }
       .cal-day { display: flex; flex-direction: column; justify-content: space-between; }

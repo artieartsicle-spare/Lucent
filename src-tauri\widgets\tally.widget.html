@@ -1,0 +1,25 @@
+<!doctype html>
+<meta name="widget-name" content="Tally">
+<meta name="widget-description" content="A counter you can click right on the desktop. It remembers its value.">
+<meta name="widget-family" content="My Widgets">
+<meta name="widget-size" content="S">
+<meta name="widget-interactive" content="true">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  #n { font: 300 54px/1 Inter, system-ui, sans-serif; letter-spacing: -.02em; }
+  .b { display: flex; gap: 10px; }
+  button { font: 600 18px/1 Inter, system-ui, sans-serif; width: 44px; height: 32px; border: 0; border-radius: 999px; color: var(--fg); background: var(--hair); cursor: default; }
+  button:active { opacity: .6; }
+</style>
+<div id="n">0</div>
+<div class="b"><button id="d">−</button><button id="u">+</button></div>
+<script>
+  let n = 0;
+  const show = () => (document.getElementById('n').textContent = n);
+  glass.ready(async () => {
+    n = await glass.storage.get('n', 0);
+    show();
+    u.onclick = () => { n++; show(); glass.storage.set('n', n); };
+    d.onclick = () => { n--; show(); glass.storage.set('n', n); };
+  });
+</script>

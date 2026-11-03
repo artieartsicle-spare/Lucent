@@ -1,0 +1,5 @@
+MIT License
+
+Copyright (c) ybouane
+
+Bundled build of https://github.com/ybouane/liquidglass (MIT). See that repository for the full license text.
